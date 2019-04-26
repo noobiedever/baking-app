@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Baking App</string>
+
+    <string name="json_read_successful">Read contents of file successfully</string>
+
+    <!-- recipe_cards.xml -->
+    <string name="tools_recipe_name">Recipe Name</string>
 </resources>
