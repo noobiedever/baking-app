@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
-                .add(R.id.container_recipes, recipeCardFragment)
+                .add(R.id.fragment_container, recipeCardFragment)
                 .commit();
     }
 }

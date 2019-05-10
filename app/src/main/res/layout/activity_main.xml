@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:id="@+id/container_recipes"
+<FrameLayout
+    android:id="@+id/fragment_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/f_recipes"
-        android:name="com.example.bakingapp.RecipeCardFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </fragment>
-
-</LinearLayout>
+    android:layout_height="wrap_content">
+</FrameLayout>
