@@ -1,5 +1,7 @@
 package com.example.bakingapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,7 @@ public class RecipeCardFragment extends Fragment
     RecipeAdapter mRecipeAdapter;
 
     public static final String TAG = RecipeCardFragment.class.getSimpleName();
+    public static final String EXTRA = TAG + "-extra";
     private static final int LOADER_ID = 1111;
 
     @Nullable
@@ -43,7 +46,7 @@ public class RecipeCardFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         ButterKnife.bind(this, rootView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false);
         mRecipeCardRecyclerView.setLayoutManager(layoutManager);
 
@@ -55,7 +58,16 @@ public class RecipeCardFragment extends Fragment
 
     @Override
     public void onClick(Recipe recipe) {
+        Log.v(TAG, recipe.getName() + " contains " + recipe.getIngredients().length +
+                " ingredients and " + recipe.getSteps().length + " steps");
 
+        Context context = getContext();
+        Class activityToStart = RecipeDetailActivity.class;
+
+        Intent intent = new Intent(context, activityToStart);
+        intent.putExtra(EXTRA, recipe);
+
+        startActivity(intent);
     }
 
     @NonNull
@@ -78,7 +90,7 @@ public class RecipeCardFragment extends Fragment
         Recipe[] recipes = JSONUtils.processFromJSON(data);
         mRecipeAdapter.setRecipeData(recipes);
         mRecipeCardRecyclerView.setAdapter(mRecipeAdapter);
-        Log.i(TAG, recipes.length + "");
+        Log.v(TAG, "Loaded " + recipes.length + " recipes... ");
     }
 
     @Override

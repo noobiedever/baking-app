@@ -1,8 +1,24 @@
 package com.example.bakingapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Recipe {
+public class Recipe implements Parcelable {
+    private static final String TAG = Recipe.class.getSimpleName();
+
+    public static final Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel source) {
+            return new Recipe(source);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     @SerializedName("id")
     private int id;
@@ -25,6 +41,15 @@ public class Recipe {
         this.steps = steps;
         this.servings = servings;
         this.image = image;
+    }
+
+    public Recipe(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.ingredients = in.createTypedArray(Ingredient.CREATOR);
+        this.steps = in.createTypedArray(Step.CREATOR);
+        this.servings = in.readInt();
+        this.image = in.readString();
     }
 
     public int getId() {
@@ -73,5 +98,20 @@ public class Recipe {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeTypedArray(ingredients, 0);
+        dest.writeTypedArray(steps, 0);
+        dest.writeInt(servings);
+        dest.writeString(image);
     }
 }
