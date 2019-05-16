@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.bakingapp.models.Ingredient;
 import com.example.bakingapp.models.Recipe;
 import com.example.bakingapp.models.Step;
 
@@ -24,10 +26,13 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     public static final String EXTRA = TAG + "-extra";
     public static final String EXTRA_POSITION = "extra-position";
 
-    Recipe mRecipe;
+    private Recipe mRecipe;
 
     @BindView(R.id.rv_ingredient_steps)
     RecyclerView mStepsRecyclerView;
+
+    @BindView(R.id.tv_recipe_ingredients)
+    TextView mIngredientsTextView;
 
     public RecipeDetailFragment() {}
 
@@ -44,10 +49,18 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_recipe_detail,
                 container, false);
         ButterKnife.bind(this, rootView);
+
+        mStepsRecyclerView.setNestedScrollingEnabled(false);
+
+        for(Ingredient ingredient : mRecipe.getIngredients()) {
+            String text = ingredient.toString() + "\n";
+            mIngredientsTextView.append(text);
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false);
