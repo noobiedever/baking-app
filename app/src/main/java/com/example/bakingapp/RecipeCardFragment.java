@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -36,6 +37,7 @@ public class RecipeCardFragment extends Fragment
     public static final String TAG = RecipeCardFragment.class.getSimpleName();
     public static final String EXTRA = TAG + "-extra";
     private static final int LOADER_ID = 1111;
+    private static final int SMALLEST_WIDTH_QAULIFIER = 600;
 
     @Nullable
     @Override
@@ -46,8 +48,16 @@ public class RecipeCardFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         ButterKnife.bind(this, rootView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
-                RecyclerView.VERTICAL, false);
+        int sw = getActivity().getResources().getConfiguration().smallestScreenWidthDp;
+
+        RecyclerView.LayoutManager layoutManager;
+        if(sw >= SMALLEST_WIDTH_QAULIFIER) {
+            layoutManager = new GridLayoutManager(getContext(),
+                    2, RecyclerView.VERTICAL, false);
+        } else {
+            layoutManager = new LinearLayoutManager(getContext(),
+                    RecyclerView.VERTICAL, false);
+        }
         mRecipeCardRecyclerView.setLayoutManager(layoutManager);
 
         mRecipeAdapter = new RecipeAdapter(this);
