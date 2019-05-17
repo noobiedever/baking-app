@@ -60,19 +60,35 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     private SimpleExoPlayer mSimpleExoPlayer;
     private static final String POSITION_KEY = "position-key";
+    private static final int SMALLEST_WIDTH_QUALIFIER = 600;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getActivity().getIntent();
-        mPosition = intent.getIntExtra(RecipeDetailFragment.EXTRA_POSITION, 0);
+        int sw = getActivity().getResources().getConfiguration().smallestScreenWidthDp;
 
-        Parcelable[] parcelableExtraArray = intent.getParcelableArrayExtra(RecipeDetailFragment.EXTRA);
-        mSteps = Arrays.copyOf(parcelableExtraArray, parcelableExtraArray.length, Step[].class);
+        if (sw >= SMALLEST_WIDTH_QUALIFIER) {
+            final int DEFAULT_POSITION = 0;
 
-        Log.v(TAG, "Steps " + mSteps.length);
+            Bundle bundle = getArguments();
+
+
+            mPosition = bundle.getInt(RecipeDetailFragment.EXTRA_POSITION, DEFAULT_POSITION);
+
+            Parcelable[] parcelableArray = bundle.getParcelableArray(RecipeDetailFragment.EXTRA);
+            mSteps = Arrays.copyOf(parcelableArray, parcelableArray.length, Step[].class);
+
+        } else {
+            Intent intent = getActivity().getIntent();
+            mPosition = intent.getIntExtra(RecipeDetailFragment.EXTRA_POSITION, 0);
+
+            Parcelable[] parcelableExtraArray = intent.getParcelableArrayExtra(RecipeDetailFragment.EXTRA);
+            mSteps = Arrays.copyOf(parcelableExtraArray, parcelableExtraArray.length, Step[].class);
+
+            Log.v(TAG, "Steps " + mSteps.length);
+        }
     }
 
     @Nullable
@@ -87,24 +103,26 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             mPosition = savedInstanceState.getInt(POSITION_KEY);
         }
 
-        int orientation = getActivity().getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_LANDSCAPE ) {
+        int sw = getActivity().getResources().getConfiguration().smallestScreenWidthDp;
 
-            initialiseExoPlayer();
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && sw < SMALLEST_WIDTH_QUALIFIER) {
+
+            initializeExoPlayer();
             return rootView;
         }
 
-        initialise();
+        initialize();
 
-        initialiseButtons();
+        initializeButtons();
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stopExoPlayer();
                 mPosition++;
-                initialise();
-                initialiseButtons();
+                initialize();
+                initializeButtons();
             }
         });
 
@@ -113,10 +131,15 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             public void onClick(View v) {
                 stopExoPlayer();
                 mPosition--;
-                initialise();
-                initialiseButtons();
+                initialize();
+                initializeButtons();
             }
         });
+
+        if(sw >= SMALLEST_WIDTH_QUALIFIER) {
+            mNextButton.setVisibility(View.GONE);
+            mPreviousButton.setVisibility(View.GONE);
+        }
 
         return rootView;
     }
@@ -124,7 +147,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(POSITION_KEY);
         }
     }
@@ -135,7 +158,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         outState.putInt(POSITION_KEY, mPosition);
     }
 
-    private void initialiseButtons() {
+    private void initializeButtons() {
         if (mPosition <= 0) {
             mPreviousButton.setVisibility(View.GONE);
         } else if (mPosition < (mSteps.length - 1)) {
@@ -146,7 +169,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         }
     }
 
-    private void initialise() {
+    private void initialize() {
         mStepInstructionTextView.setText(mSteps[mPosition].getDesctription());
         if (mSteps[mPosition].getVideoURL().equals("") || mSteps[mPosition].getVideoURL() == null) {
 
@@ -156,7 +179,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
                     .into(mThumbnailImageView);
         } else {
             showPlayerView();
-            initialiseExoPlayer();
+            initializeExoPlayer();
         }
     }
 
@@ -170,7 +193,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mThumbnailImageView.setVisibility(View.GONE);
     }
 
-    private void initialiseExoPlayer() {
+    private void initializeExoPlayer() {
 
         if (mSimpleExoPlayer == null) {
             // create player
@@ -189,7 +212,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     private void stopExoPlayer() {
-        if(mSimpleExoPlayer != null) mSimpleExoPlayer.stop();
+        if (mSimpleExoPlayer != null) mSimpleExoPlayer.stop();
     }
 
     @Override

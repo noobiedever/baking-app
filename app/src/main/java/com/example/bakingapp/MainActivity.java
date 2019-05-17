@@ -10,6 +10,7 @@ import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -19,10 +20,16 @@ import com.example.bakingapp.utils.FileUtils;
 public class MainActivity extends AppCompatActivity {
     private RecipeCardFragment mRecipeCardFragment;
     private static final String FRAGMENT_KEY = "fragment-key";
+    private final int SMALLEST_WIDTH_QUALIFIER = 600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int sw = getResources().getConfiguration().smallestScreenWidthDp;
+
+        if(sw >= SMALLEST_WIDTH_QUALIFIER) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState != null) {

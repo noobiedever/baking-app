@@ -34,7 +34,7 @@ public class RecipeCardFragment extends Fragment
 
     RecipeAdapter mRecipeAdapter;
 
-    public static final String TAG = RecipeCardFragment.class.getSimpleName();
+    private static final String TAG = RecipeCardFragment.class.getSimpleName();
     public static final String EXTRA = TAG + "-extra";
     private static final int LOADER_ID = 1111;
     private static final int SMALLEST_WIDTH_QAULIFIER = 600;

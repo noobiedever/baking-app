@@ -2,7 +2,6 @@ package com.example.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +28,11 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     private Recipe mRecipe;
 
+    @Nullable
     @BindView(R.id.rv_ingredient_steps)
     RecyclerView mStepsRecyclerView;
 
+    @Nullable
     @BindView(R.id.tv_recipe_ingredients)
     TextView mIngredientsTextView;
 
@@ -53,7 +54,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_recipe_detail,
+        View rootView = inflater.inflate(R.layout.fragment_recipe_details,
                 container, false);
         ButterKnife.bind(this, rootView);
 
@@ -77,14 +78,29 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
 
     @Override
     public void onClick(Step[] steps, int position) {
+        int sw = getActivity().getResources().getConfiguration().smallestScreenWidthDp;
+        final int SMALLEST_WIDTH_QUALIFIER = 600;
+        if(sw >= SMALLEST_WIDTH_QUALIFIER) {
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            Bundle bundle = new Bundle();
 
-        Context context = getContext();
-        Class classToStart = StepDetailActivity.class;
+            bundle.putInt(EXTRA_POSITION, position);
+            bundle.putParcelableArray(EXTRA, steps);
+            stepDetailFragment.setArguments(bundle);
 
-        Intent intent = new Intent(context, classToStart);
-        intent.putExtra(EXTRA_POSITION, position);
-        intent.putExtra(EXTRA, steps);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fl_step_detail_container, stepDetailFragment)
+                    .commit();
 
-        startActivity(intent);
+        } else {
+            Context context = getContext();
+            Class classToStart = StepDetailActivity.class;
+
+            Intent intent = new Intent(context, classToStart);
+            intent.putExtra(EXTRA_POSITION, position);
+            intent.putExtra(EXTRA, steps);
+
+            startActivity(intent);
+        }
     }
 }

@@ -60,6 +60,10 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
         notifyDataSetChanged();
     }
 
+    public Step[] getData() {
+        return mStepsData;
+    }
+
     public class StepAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener{
         @BindView(R.id.tv_recipe_step_description)
