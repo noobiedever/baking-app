@@ -52,7 +52,6 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        int orientation = getActivity().getResources().getConfiguration().orientation;
 
         View rootView = inflater.inflate(R.layout.activity_recipe_detail,
                 container, false);

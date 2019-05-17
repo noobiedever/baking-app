@@ -42,22 +42,24 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     @BindView(R.id.pv_exoplayer)
     PlayerView mPlayerView;
 
-    @BindView(R.id.pv_landscape_exoplayer)
-    PlayerView mLandscapePlayerView;
-
+    @Nullable
     @BindView(R.id.iv_thumbnail)
     ImageView mThumbnailImageView;
 
+    @Nullable
     @BindView(R.id.tv_step_instruction)
     TextView mStepInstructionTextView;
 
+    @Nullable
     @BindView(R.id.b_next_step)
     Button mNextButton;
 
+    @Nullable
     @BindView(R.id.b_previous_step)
     Button mPreviousButton;
 
     private SimpleExoPlayer mSimpleExoPlayer;
+    private static final String POSITION_KEY = "position-key";
 
 
     @Override
@@ -75,12 +77,22 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_step_detail, container,
                 false);
 
-
         ButterKnife.bind(this, rootView);
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
+        }
+
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE ) {
+
+            initialiseExoPlayer();
+            return rootView;
+        }
 
         initialise();
 
@@ -89,6 +101,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopExoPlayer();
                 mPosition++;
                 initialise();
                 initialiseButtons();
@@ -98,6 +111,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopExoPlayer();
                 mPosition--;
                 initialise();
                 initialiseButtons();
@@ -107,14 +121,27 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POSITION_KEY, mPosition);
+    }
+
     private void initialiseButtons() {
         if (mPosition <= 0) {
             mPreviousButton.setVisibility(View.GONE);
         } else if (mPosition < (mSteps.length - 1)) {
             mNextButton.setVisibility(View.VISIBLE);
             mPreviousButton.setVisibility(View.VISIBLE);
-        }
-        if (mPosition >= (mSteps.length - 1)) {
+        } else if (mPosition >= (mSteps.length - 1)) {
             mNextButton.setVisibility(View.GONE);
         }
     }
@@ -161,6 +188,10 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mSimpleExoPlayer.prepare(videoSource);
     }
 
+    private void stopExoPlayer() {
+        if(mSimpleExoPlayer != null) mSimpleExoPlayer.stop();
+    }
+
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playWhenReady && playbackState == Player.STATE_READY) {
@@ -173,10 +204,10 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         if (mSimpleExoPlayer != null) {
-            mSimpleExoPlayer.stop();
+            stopExoPlayer();
             mSimpleExoPlayer.release();
             mSimpleExoPlayer = null;
         }
