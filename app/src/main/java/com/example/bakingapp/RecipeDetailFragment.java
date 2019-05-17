@@ -2,6 +2,7 @@ package com.example.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+
         View rootView = inflater.inflate(R.layout.activity_recipe_detail,
                 container, false);
         ButterKnife.bind(this, rootView);

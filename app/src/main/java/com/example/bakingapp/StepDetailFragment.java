@@ -1,6 +1,7 @@
 package com.example.bakingapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -33,13 +34,16 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StepDetailFragment extends Fragment implements Player.EventListener{
+public class StepDetailFragment extends Fragment implements Player.EventListener {
     private static final String TAG = StepDetailFragment.class.getSimpleName();
     private Step[] mSteps;
     private int mPosition;
 
     @BindView(R.id.pv_exoplayer)
     PlayerView mPlayerView;
+
+    @BindView(R.id.pv_landscape_exoplayer)
+    PlayerView mLandscapePlayerView;
 
     @BindView(R.id.iv_thumbnail)
     ImageView mThumbnailImageView;
@@ -75,6 +79,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         View rootView = inflater.inflate(R.layout.activity_step_detail, container,
                 false);
 
+
         ButterKnife.bind(this, rootView);
 
         initialise();
@@ -103,39 +108,44 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     private void initialiseButtons() {
-        if(mPosition <= 0) {
+        if (mPosition <= 0) {
             mPreviousButton.setVisibility(View.GONE);
-        } else if(mPosition < (mSteps.length - 1)) {
+        } else if (mPosition < (mSteps.length - 1)) {
             mNextButton.setVisibility(View.VISIBLE);
             mPreviousButton.setVisibility(View.VISIBLE);
         }
-        if(mPosition >= (mSteps.length - 1)) {
+        if (mPosition >= (mSteps.length - 1)) {
             mNextButton.setVisibility(View.GONE);
         }
     }
 
     private void initialise() {
         mStepInstructionTextView.setText(mSteps[mPosition].getDesctription());
-        if(mSteps[mPosition].getVideoURL().equals("") || mSteps[mPosition].getVideoURL() == null) {
-            mPlayerView.setVisibility(View.GONE);
-            mThumbnailImageView.setVisibility(View.VISIBLE);
+        if (mSteps[mPosition].getVideoURL().equals("") || mSteps[mPosition].getVideoURL() == null) {
 
-            if(!mSteps[mPosition].getThumbnailURL().equals("") && mSteps[mPosition] != null) {
-                Picasso.get().load(Uri.parse(mSteps[mPosition].getThumbnailURL()))
-                        .into(mThumbnailImageView);
-            } else {
-                mThumbnailImageView.setImageResource(R.drawable.ic_recipe_image);
-            }
+            showImageView();
+            Picasso.get().load(Uri.parse(mSteps[mPosition].getThumbnailURL()))
+                    .placeholder(R.drawable.ic_recipe_image)
+                    .into(mThumbnailImageView);
         } else {
-            mPlayerView.setVisibility(View.VISIBLE);
-            mThumbnailImageView.setVisibility(View.GONE);
+            showPlayerView();
             initialiseExoPlayer();
         }
     }
 
+    private void showImageView() {
+        mPlayerView.setVisibility(View.GONE);
+        mThumbnailImageView.setVisibility(View.VISIBLE);
+    }
+
+    private void showPlayerView() {
+        mPlayerView.setVisibility(View.VISIBLE);
+        mThumbnailImageView.setVisibility(View.GONE);
+    }
+
     private void initialiseExoPlayer() {
 
-        if(mSimpleExoPlayer == null) {
+        if (mSimpleExoPlayer == null) {
             // create player
             mSimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext());
             // attach player
@@ -153,9 +163,9 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if(playWhenReady && playbackState == Player.STATE_READY) {
+        if (playWhenReady && playbackState == Player.STATE_READY) {
             // playing
-        } else if(playWhenReady) {
+        } else if (playWhenReady) {
             // playback ended, buffering, stopped, or failed
         } else {
             // playback paused
@@ -165,7 +175,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mSimpleExoPlayer != null) {
+        if (mSimpleExoPlayer != null) {
             mSimpleExoPlayer.stop();
             mSimpleExoPlayer.release();
             mSimpleExoPlayer = null;
