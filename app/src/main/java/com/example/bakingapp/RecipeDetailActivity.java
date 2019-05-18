@@ -16,6 +16,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private static final String RECIPE_FRAGMENT_KEY = "recipe-fragment-key";
     private static final String STEP_FRAGMENT_KEY = "step-fragment-key";
     private static final int SMALLEST_WIDTH_QUALIFIER = 600;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         int sw = getResources().getConfiguration().smallestScreenWidthDp;
 
         if(sw >= SMALLEST_WIDTH_QUALIFIER) {
+            mTwoPane = true;
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
             setContentView(R.layout.activity_recipe_detail);
@@ -34,6 +36,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 mStepDetailFragment = (StepDetailFragment) getSupportFragmentManager()
                         .getFragment(savedInstanceState, STEP_FRAGMENT_KEY);
             } else {
+                mTwoPane = false;
                 mRecipeDetailFragment = new RecipeDetailFragment();
                 mStepDetailFragment = new StepDetailFragment();
 
@@ -81,6 +84,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         getSupportFragmentManager().putFragment(outState, RECIPE_FRAGMENT_KEY, mRecipeDetailFragment);
+        if(mTwoPane)
         getSupportFragmentManager().putFragment(outState, STEP_FRAGMENT_KEY, mStepDetailFragment);
     }
 
@@ -89,7 +93,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         mRecipeDetailFragment = (RecipeDetailFragment) getSupportFragmentManager()
                 .getFragment(savedInstanceState, RECIPE_FRAGMENT_KEY);
-        mStepDetailFragment = (StepDetailFragment) getSupportFragmentManager()
+        if(mTwoPane) mStepDetailFragment = (StepDetailFragment) getSupportFragmentManager()
                 .getFragment(savedInstanceState, STEP_FRAGMENT_KEY);
     }
 }

@@ -29,7 +29,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     private Recipe mRecipe;
 
     @Nullable
-    @BindView(R.id.rv_ingredient_steps)
+    @BindView(R.id.rv_recipe_steps)
     RecyclerView mStepsRecyclerView;
 
     @Nullable
