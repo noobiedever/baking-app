@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
-    Recipe[] mRecipeData;
+    private Recipe[] mRecipeData;
 
     interface RecipeClickHandler {
         void onClick(Recipe recipe);
@@ -83,5 +83,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     public void setRecipeData(Recipe[] data) {
         this.mRecipeData = data;
         notifyDataSetChanged();
+    }
+
+    public Recipe[] getRecipeData() {
+        return this.mRecipeData;
     }
 }

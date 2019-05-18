@@ -2,16 +2,17 @@ package com.example.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.bakingapp.models.Recipe;
-import com.example.bakingapp.utils.FileUtils;
-import com.example.bakingapp.utils.JSONUtils;
+import com.example.bakingapp.utils.NetworkUtils;
+
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,24 +27,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeCardFragment extends Fragment
-        implements RecipeAdapter.RecipeClickHandler, LoaderManager.LoaderCallbacks<String> {
+        implements RecipeAdapter.RecipeClickHandler, LoaderManager.LoaderCallbacks<Recipe[]> {
 
     // RecyclerView
     @BindView(R.id.rv_recipe_list)
     RecyclerView mRecipeCardRecyclerView;
 
-    RecipeAdapter mRecipeAdapter;
+    private Recipe[] mRecipes;
+
+    private RecipeAdapter mRecipeAdapter;
 
     private static final String TAG = RecipeCardFragment.class.getSimpleName();
     public static final String EXTRA = TAG + "-extra";
+    public static final String PARCELABLE_EXTRA = "parcelable-extra";
     private static final int LOADER_ID = 1111;
     private static final int SMALLEST_WIDTH_QAULIFIER = 600;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LoaderManager loaderManager = LoaderManager.getInstance(this);
-        loaderManager.initLoader(LOADER_ID, null, this).forceLoad();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
         ButterKnife.bind(this, rootView);
@@ -58,11 +61,18 @@ public class RecipeCardFragment extends Fragment
             layoutManager = new LinearLayoutManager(getContext(),
                     RecyclerView.VERTICAL, false);
         }
+
         mRecipeCardRecyclerView.setLayoutManager(layoutManager);
-
         mRecipeAdapter = new RecipeAdapter(this);
-        mRecipeCardRecyclerView.setAdapter(null);
-
+        mRecipeCardRecyclerView.setAdapter(mRecipeAdapter);
+        if(savedInstanceState == null) {
+            LoaderManager loaderManager = LoaderManager.getInstance(this);
+            loaderManager.initLoader(LOADER_ID, null, this).forceLoad();
+        } else {
+            Parcelable[] parcelables = savedInstanceState.getParcelableArray(PARCELABLE_EXTRA);
+            mRecipes = Arrays.copyOf(parcelables, parcelables.length, Recipe[].class);
+            mRecipeAdapter.setRecipeData(mRecipes);
+        }
         return rootView;
     }
 
@@ -82,29 +92,58 @@ public class RecipeCardFragment extends Fragment
 
     @NonNull
     @Override
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AsyncTaskLoader<String>(getContext()) {
+    public Loader<Recipe[]> onCreateLoader(int id, @Nullable Bundle args) {
+        return new AsyncTaskLoader<Recipe[]>(getContext()) {
             @Nullable
             @Override
-            public String loadInBackground() {
-                String data = FileUtils.loadJSONFromFile(getContext());
+            public Recipe[] loadInBackground() {
+                Recipe[] recipes = NetworkUtils.getRecipes();
 
-                Log.v(TAG, data);
-                return data;
+                Log.v(TAG, recipes.length + "");
+                return recipes;
             }
         };
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        Recipe[] recipes = JSONUtils.processFromJSON(data);
-        mRecipeAdapter.setRecipeData(recipes);
+    public void onLoadFinished(@NonNull Loader<Recipe[]> loader, Recipe[] data) {
+        mRecipes = data;
+        mRecipeAdapter.setRecipeData(data);
+
         mRecipeCardRecyclerView.setAdapter(mRecipeAdapter);
-        Log.v(TAG, "Loaded " + recipes.length + " recipes... ");
+
+        Log.v(TAG, "Loaded " + data.length + " recipes... ");
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<Recipe[]> loader) {
+    }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArray(PARCELABLE_EXTRA, mRecipes);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            Parcelable[] parcelables = savedInstanceState.getParcelableArray(PARCELABLE_EXTRA);
+            mRecipes = Arrays.copyOf(parcelables, parcelables.length, Recipe[].class);
+            mRecipeAdapter.setRecipeData(mRecipes);
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            Parcelable[] parcelables = savedInstanceState.getParcelableArray(PARCELABLE_EXTRA);
+            mRecipes = Arrays.copyOf(parcelables, parcelables.length, Recipe[].class);
+            if(mRecipeAdapter == null) mRecipeAdapter = new RecipeAdapter(this);
+            mRecipeAdapter.setRecipeData(mRecipes);
+        }
     }
 }
