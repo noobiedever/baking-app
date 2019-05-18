@@ -36,6 +36,10 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
     @BindView(R.id.tv_recipe_ingredients)
     TextView mIngredientsTextView;
 
+    @Nullable
+    @BindView(R.id.tv_recipe_name)
+    TextView mRecipeNameTextView;
+
     public RecipeDetailFragment() {}
 
     @Override
@@ -59,6 +63,9 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepCl
         ButterKnife.bind(this, rootView);
 
         mStepsRecyclerView.setNestedScrollingEnabled(false);
+
+        String name = mRecipe.getName();
+        mRecipeNameTextView.setText(name);
 
         for(Ingredient ingredient : mRecipe.getIngredients()) {
             String text = ingredient.toString() + "\n";
