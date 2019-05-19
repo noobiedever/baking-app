@@ -1,5 +1,6 @@
 package com.example.bakingapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,8 +114,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             return rootView;
         }
 
-        initialize();
-
+        initializeTextView();
         initializeButtons();
 
         mNextButton.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +122,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             public void onClick(View v) {
                 stopExoPlayer();
                 mPosition++;
+                initializeTextView();
                 initialize();
                 initializeButtons();
             }
@@ -131,6 +133,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             public void onClick(View v) {
                 stopExoPlayer();
                 mPosition--;
+                initializeTextView();
                 initialize();
                 initializeButtons();
             }
@@ -141,7 +144,13 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             mPreviousButton.setVisibility(View.GONE);
         }
 
+        initialize();
+
         return rootView;
+    }
+
+    private void initializeTextView() {
+        mStepInstructionTextView.setText(mSteps[mPosition].getDesctription());
     }
 
     @Override
@@ -170,7 +179,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     private void initialize() {
-        mStepInstructionTextView.setText(mSteps[mPosition].getDesctription());
         if (mSteps[mPosition].getVideoURL().equals("") || mSteps[mPosition].getVideoURL() == null) {
 
             showImageView();
