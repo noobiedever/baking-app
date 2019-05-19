@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.bakingapp.data.AppDatabase;
 import com.example.bakingapp.utils.FileUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         int sw = getResources().getConfiguration().smallestScreenWidthDp;
 
         if(sw >= SMALLEST_WIDTH_QUALIFIER) {

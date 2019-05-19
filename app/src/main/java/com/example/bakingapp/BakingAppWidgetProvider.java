@@ -32,4 +32,9 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
         super.onEnabled(context);
     }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+    }
 }

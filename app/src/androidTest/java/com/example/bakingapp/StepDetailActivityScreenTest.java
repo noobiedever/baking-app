@@ -3,6 +3,7 @@ package com.example.bakingapp;
 import android.content.Intent;
 
 import com.example.bakingapp.models.Recipe;
+import com.example.bakingapp.utils.SampleRecipeData;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import androidx.test.rule.ActivityTestRule;
 
 @RunWith(AndroidJUnit4.class)
 public class StepDetailActivityScreenTest {
-    private Recipe testRecipe = Recipe.testObject();
+    private Recipe testRecipe = SampleRecipeData.testObject();
     private static final int POSITION = 0;
 
     @Rule

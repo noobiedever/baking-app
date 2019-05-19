@@ -5,11 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.test.espresso.IdlingResource;
 
 import android.os.Bundle;
-
-import com.example.bakingapp.idlingresource.SimpleIdlingResource;
 
 public class StepDetailActivity extends AppCompatActivity {
     private static final String FRAGMENT_KEY = "fragment-key";
@@ -19,7 +16,6 @@ public class StepDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        mSimpleIdlingResource = new SimpleIdlingResource();
 
         if (savedInstanceState != null){
             mStepDetailFragment = (StepDetailFragment)getSupportFragmentManager()

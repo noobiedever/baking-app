@@ -1,6 +1,5 @@
 package com.example.bakingapp;
 
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
