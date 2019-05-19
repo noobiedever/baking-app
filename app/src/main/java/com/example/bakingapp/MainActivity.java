@@ -22,11 +22,13 @@ public class MainActivity extends AppCompatActivity {
     private RecipeCardFragment mRecipeCardFragment;
     private static final String FRAGMENT_KEY = "fragment-key";
     private final int SMALLEST_WIDTH_QUALIFIER = 600;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mDb = AppDatabase.getInstance(this);
         int sw = getResources().getConfiguration().smallestScreenWidthDp;
 
         if(sw >= SMALLEST_WIDTH_QUALIFIER) {
