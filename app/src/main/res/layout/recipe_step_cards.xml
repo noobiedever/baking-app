@@ -7,8 +7,8 @@
     android:id="@+id/cv_steps"
     android:layout_width="match_parent"
     android:layout_height="75dp"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="4dp">
+    android:layout_margin="@dimen/sixteen_dp"
+    app:cardCornerRadius="@dimen/four_dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,12 +17,13 @@
 
         <TextView
             android:id="@+id/tv_recipe_step_description"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:layout_gravity="center_vertical"
             tools:text="Recipe Step Description"
-            android:padding="16dp"/>
+            android:padding="@dimen/sixteen_dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

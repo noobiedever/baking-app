@@ -27,13 +27,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // get smallest screen width of current device
         int sw = getResources().getConfiguration().smallestScreenWidthDp;
 
+        // if device has smallest screen width of 600 lock orientation to landscape
         if(sw >= SMALLEST_WIDTH_QUALIFIER) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
         setContentView(R.layout.activity_main);
 
+        // if savedInstanceState is not null us FragmentManager to retrieve Fragment
+        // else create a new instance of that Fragment
         if(savedInstanceState != null) {
             mRecipeCardFragment = (RecipeCardFragment) getSupportFragmentManager()
                     .getFragment(savedInstanceState, FRAGMENT_KEY);

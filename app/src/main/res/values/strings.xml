@@ -9,4 +9,13 @@
     <!-- activity_step_detail.xml -->
     <string name="previous_button_string">Previous</string>
     <string name="next_button_string">Next</string>
+
+    <!-- BakingAppWidgetProvider.java -->
+    <string name="bawp_log">Updating widgets</string>
+
+    <!--  BakingAppWidgetService.java -->
+    <string name="baws_log">Adapter has %1$d items</string>
+
+    <!-- RecipeCardFragment.java -->
+    <string name="rcf_log_onclick">%1$s contains %2$d ingredients and %3$d steps</string>
 </resources>

@@ -57,22 +57,30 @@ public class BakingAppWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.v(TAG, "Adapter contains " + getCount() + " items");
+            Log.v(TAG, mContext.getResources().getString(R.string.baws_log, getCount()));
+
+            // RemoteViews object associated with widget items for AdapterView
             RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(), R.layout.widget_item);
 
+            // set name of Recipe in corresponding TextView
             remoteViews.setTextViewText(R.id.tv_widget_recipe_name, mRecipes[position].getName());
 
+            // StringBuilder to build text for Ingredient array
             StringBuilder stringBuilder = new StringBuilder();
 
             for(Ingredient ingredient: mRecipes[position].getIngredients()) {
                 stringBuilder.append("\n" + ingredient.toString());
             }
 
+            // set ingredients in corresponding TextView
             remoteViews.setTextViewText(R.id.tv_widget_ingredients, stringBuilder.toString());
 
+            // fill-in Intent to pass to BakingAppWidgetProvider
             Intent fillInIntent = new Intent();
+            // put current Recipe as an extra
             fillInIntent.putExtra(RecipeCardFragment.EXTRA, mRecipes[position]);
 
+            // set OnClickFillInIntent for layout container of each AdapterView item
             remoteViews.setOnClickFillInIntent(R.id.ll_widget_item_container, fillInIntent);
 
 

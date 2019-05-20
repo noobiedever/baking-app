@@ -79,8 +79,8 @@ public class RecipeCardFragment extends Fragment
 
     @Override
     public void onClick(Recipe recipe) {
-        Log.v(TAG, recipe.getName() + " contains " + recipe.getIngredients().length +
-                " ingredients and " + recipe.getSteps().length + " steps");
+        Log.v(TAG, getString(R.string.rcf_log_onclick, recipe.getName(), recipe.getIngredients().length,
+                recipe.getSteps().length));
 
         Context context = getContext();
         Class activityToStart = RecipeDetailActivity.class;
@@ -95,11 +95,12 @@ public class RecipeCardFragment extends Fragment
     @Override
     public Loader<Recipe[]> onCreateLoader(int id, @Nullable Bundle args) {
         return new AsyncTaskLoader<Recipe[]>(getContext()) {
-            @Nullable
             @Override
             public Recipe[] loadInBackground() {
+                // retrieve data from network
                 Recipe[] recipes = NetworkUtils.getRecipes();
 
+                // cache data for widget
                 AppDatabase.getInstance(getContext()).movieDao().insertRecipes(recipes);
                 Log.v(TAG, recipes.length + "");
                 return recipes;
