@@ -12,15 +12,8 @@ import androidx.room.Transaction;
 public abstract class RecipeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertRecipe(Recipe recipe);
+    public abstract void insertRecipes(Recipe[] recipes);
 
     @Query("SELECT * FROM recipe")
     public abstract Recipe[] loadRecipes();
-
-    @Transaction
-    public void insertRecipes(Recipe[] recipes) {
-        for(Recipe recipe: recipes) {
-            insertRecipe(recipe);
-        }
-    }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bakingapp.data.AppDatabase;
 import com.example.bakingapp.models.Recipe;
 import com.example.bakingapp.utils.NetworkUtils;
 
@@ -99,6 +100,7 @@ public class RecipeCardFragment extends Fragment
             public Recipe[] loadInBackground() {
                 Recipe[] recipes = NetworkUtils.getRecipes();
 
+                AppDatabase.getInstance(getContext()).movieDao().insertRecipes(recipes);
                 Log.v(TAG, recipes.length + "");
                 return recipes;
             }

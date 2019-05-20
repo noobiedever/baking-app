@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "recipe")
@@ -36,6 +37,7 @@ public class Recipe implements Parcelable {
     @SerializedName("image")
     private String image;
 
+
     public Recipe(int id, String name, Ingredient[] ingredients, Step[] steps, int servings,
                   String image) {
         this.id = id;
@@ -46,6 +48,7 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
+    @Ignore
     public Recipe(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();

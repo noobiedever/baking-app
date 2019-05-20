@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/widget"
-    android:minWidth="100dp"
-    android:minHeight="100dp"
+    android:initialLayout="@layout/widget_item"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
     android:previewImage="@drawable/ic_recipe_image"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
