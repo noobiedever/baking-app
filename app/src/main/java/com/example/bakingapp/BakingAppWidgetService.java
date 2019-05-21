@@ -3,8 +3,6 @@ package com.example.bakingapp;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -40,7 +38,7 @@ public class BakingAppWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            mRecipes = AppDatabase.getInstance(mContext).movieDao().loadRecipes();
+            mRecipes = AppDatabase.getInstance(mContext).recipeDao().loadRecipes();
         }
 
         @Override

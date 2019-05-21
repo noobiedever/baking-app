@@ -101,7 +101,7 @@ public class RecipeCardFragment extends Fragment
                 Recipe[] recipes = NetworkUtils.getRecipes();
 
                 // cache data for widget
-                AppDatabase.getInstance(getContext()).movieDao().insertRecipes(recipes);
+                AppDatabase.getInstance(getContext()).recipeDao().insertRecipes(recipes);
                 Log.v(TAG, recipes.length + "");
                 return recipes;
             }
